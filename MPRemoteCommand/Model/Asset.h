@@ -12,15 +12,15 @@
 @interface Asset : NSObject {
     
     // MARK: Types
-    static NSString *nameKey;
+    NSString *nameKey;
     
     // MARK: Properties
     
     /// The name of the asset to present in the application.
     NSString *assetName;
-    
-    /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
-    AVURLAsset *urlAsset;
 }
+
+/// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
+@property (strong, nonatomic) AVURLAsset *urlAsset;
 
 @end

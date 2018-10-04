@@ -38,32 +38,33 @@ typedef NS_ENUM(NSUInteger , PlaybackState) {
     
     // MARK: Properties
     
-    /// The instance of AVPlayer that will be used for playback of AssetPlaybackManager.playerItem.
-    AVPlayer *player;
-    
     /// The instance of `MPNowPlayingInfoCenter` that is used for updating metadata for the currently playing `Asset`.
     MPNowPlayingInfoCenter *nowPlayingInfoCenter;
     
     /// A token obtained from calling `player`'s `addPeriodicTimeObserverForInterval(_:queue:usingBlock:)` method.
     id timeObserverToken;
     
-    /// The progress in percent for the playback of `asset`.  This is marked as `dynamic` so that this property can be observed using KVO.
-    float percentProgress;
     
     /// The total duration in seconds for the `asset`.  This is marked as `dynamic` so that this property can be observed using KVO.
     float duration;
 
-    /// The current playback position in seconds for the `asset`.  This is marked as `dynamic` so that this property can be observed using KVO.
-    float playbackPosition;
-    
     /// A Bool for tracking if playback should be resumed after an interruption.  See README.md for more information.
     BOOL shouldResumePlaybackAfterInterruption;
-    
-    /// The AVPlayerItem associated with AssetPlaybackManager.asset.urlAsset
-    AVPlayerItem *playerItem;
-    
-    /// The Asset that is currently being loaded for playback.
-    Asset *asset;
 }
+
+/// The progress in percent for the playback of `asset`.  This is marked as `dynamic` so that this property can be observed using KVO.
+@property (nonatomic) Float64 percentProgress;
+
+/// The current playback position in seconds for the `asset`.  This is marked as `dynamic` so that this property can be observed using KVO.
+@property (nonatomic) Float64 playbackPosition;
+
+/// The instance of AVPlayer that will be used for playback of AssetPlaybackManager.playerItem.
+@property (strong, nonatomic) AVPlayer *player;
+
+/// The AVPlayerItem associated with AssetPlaybackManager.asset.urlAsset
+@property (strong, nonatomic) AVPlayerItem *playerItem;
+
+/// The Asset that is currently being loaded for playback.
+@property (strong, nonatomic) Asset *asset;
 
 @end

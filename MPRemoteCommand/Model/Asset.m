@@ -10,7 +10,11 @@
 
 @implementation Asset
 -(instancetype)init {
-    nameKey = @"AssetName";
+    self = [super init];
+    if (self != nil) {
+        nameKey = @"AssetName";
+    }
+    return self;
 }
 
 @end
