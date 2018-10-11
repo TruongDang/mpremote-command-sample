@@ -10,6 +10,18 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "Asset.h"
 
+/// Notification that is posted when the `nextTrack()` is called.
+extern NSString *const kNextTrackNotification;
+
+/// Notification that is posted when the `previousTrack()` is called.
+extern NSString *const kPreviousTrackNotification;
+
+/// Notification that is posted when currently playing `Asset` did change.
+extern NSString *const kCurrentAssetDidChangeNotification;
+
+/// Notification that is posted when the internal AVPlayer rate did change.
+extern NSString *const kPlayerRateDidChangeNotification;
+
 /// An enumeration of possible playback states that `AssetPlaybackManager` can be in.
 typedef NS_ENUM(NSUInteger , PlaybackState) {
     PlaybackStateInitial,    /// - initial: The playback state that `AssetPlaybackManager` starts in when nothing is playing.
@@ -21,20 +33,9 @@ typedef NS_ENUM(NSUInteger , PlaybackState) {
 @interface AssetPlaybackManager : NSObject {
     // MARK: Types
     
-    /// Notification that is posted when the `nextTrack()` is called.
-    NSNotification *nextTrackNotification;
-    
-    /// Notification that is posted when the `previousTrack()` is called.
-    NSNotification *previousTrackNotification;
-    
     /// The state that the internal `AVPlayer` is in.
     PlaybackState state;
 
-    /// Notification that is posted when currently playing `Asset` did change.
-    NSNotification *currentAssetDidChangeNotification;
-    
-    /// Notification that is posted when the internal AVPlayer rate did change.
-    NSNotification *playerRateDidChangeNotification;
     
     // MARK: Properties
     
@@ -46,7 +47,7 @@ typedef NS_ENUM(NSUInteger , PlaybackState) {
     
     
     /// The total duration in seconds for the `asset`.  This is marked as `dynamic` so that this property can be observed using KVO.
-    float duration;
+    Float64 duration;
 
     /// A Bool for tracking if playback should be resumed after an interruption.  See README.md for more information.
     BOOL shouldResumePlaybackAfterInterruption;
@@ -67,4 +68,16 @@ typedef NS_ENUM(NSUInteger , PlaybackState) {
 /// The Asset that is currently being loaded for playback.
 @property (strong, nonatomic) Asset *asset;
 
+- (void)pause;
+- (void)play;
+- (void)stop;
+- (void)togglePlayPause;
+- (void)nextTrack;
+- (void)previousTrack;
+- (void)skipForwardWithTimeInterval:(NSTimeInterval)interval;
+- (void)skipBackwardWithTimeInterval:(NSTimeInterval)interval;
+- (void)seekToPosition:(NSTimeInterval)position;
+- (void)beginFastForward;
+- (void)beginRewind;
+- (void)endRewindFastForward;
 @end

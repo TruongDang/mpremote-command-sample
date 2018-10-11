@@ -11,8 +11,8 @@
 
 @interface RemoteCommandDataSource : NSObject {
     RemoteCommandManager *remoteCommandManager;
+    NSArray *commands;
 }
-
 -(instancetype)initWithRemoteCommandManager:(RemoteCommandManager *)remoteCommandManager;
 
 @end

@@ -9,16 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface Asset : NSObject {
-    
-    // MARK: Types
-    NSString *nameKey;
-    
-    // MARK: Properties
-    
-    /// The name of the asset to present in the application.
-    NSString *assetName;
-}
+// MARK: Types
+extern NSString *const kAssetNameKey;
+
+@interface Asset : NSObject
+
+/// The name of the asset to present in the application.
+@property (strong, nonatomic) NSString *assetName;
 
 /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
 @property (strong, nonatomic) AVURLAsset *urlAsset;

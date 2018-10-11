@@ -8,13 +8,7 @@
 
 #import "Asset.h"
 
-@implementation Asset
--(instancetype)init {
-    self = [super init];
-    if (self != nil) {
-        nameKey = @"AssetName";
-    }
-    return self;
-}
+NSString *const kAssetNameKey = @"AssetName";
 
+@implementation Asset
 @end

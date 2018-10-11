@@ -8,15 +8,16 @@
 
 #import "AssetPlaybackManager.h"
 
+NSString *const kNextTrackNotification = @"nextTrackNotification";
+NSString *const kPreviousTrackNotification = @"previousTrackNotification";
+NSString *const kCurrentAssetDidChangeNotification = @"currentAssetDidChangeNotification";
+NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotification";
+
 @implementation AssetPlaybackManager
 
 -(instancetype)init {
     self = [super init];
     if (self != nil) {
-        nextTrackNotification = [NSNotification notificationWithName:@"nextTrackNotification" object:nil];
-        previousTrackNotification = [NSNotification notificationWithName:@"previousTrackNotification" object:nil];
-        currentAssetDidChangeNotification = [NSNotification notificationWithName:@"currentAssetDidChangeNotification" object:nil];
-        playerRateDidChangeNotification = [NSNotification notificationWithName:@"playerRateDidChangeNotification" object:nil];
         _player = [AVPlayer new];
         nowPlayingInfoCenter = [MPNowPlayingInfoCenter defaultCenter];
         _percentProgress = 0;
@@ -75,10 +76,144 @@
         // Unload currentItem so that the state is updated globally.
         [_player replaceCurrentItemWithPlayerItem:nil];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"currentAssetDidChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kCurrentAssetDidChangeNotification object:nil];
 }
 
-- (void)play {}
+- (void)play {
+    if (_asset != nil) { return; }
+    
+    if (shouldResumePlaybackAfterInterruption == false) {
+        shouldResumePlaybackAfterInterruption = true;
+        return;
+    }
+    
+    [_player play];
+}
+
+- (void)pause {
+    if (_asset != nil) { return; }
+
+    if (state == PlaybackStateInterrupted) {
+        shouldResumePlaybackAfterInterruption = false;
+        return;
+    }
+    [_player pause];
+}
+
+- (void)togglePlayPause {
+    if (_asset != nil) { return; }
+
+    if (_player.rate == 1.0) {
+        [self pause];
+    } else {
+        [self play];
+    }
+}
+
+- (void)stop {
+    if (_asset != nil) { return; }
+
+    _asset = nil;
+    _playerItem = nil;
+    [_player replaceCurrentItemWithPlayerItem:nil];
+}
+
+- (void)nextTrack {
+    if (_asset != nil) { return; }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNextTrackNotification object:nil userInfo:@{kAssetNameKey: _asset.assetName}];
+}
+
+- (void)previousTrack {
+    if (_asset != nil) { return; }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPreviousTrackNotification object:nil userInfo:@{kAssetNameKey: _asset.assetName}];
+}
+
+- (void)skipForwardWithTimeInterval:(NSTimeInterval)interval {
+    if (_asset != nil) { return; }
+    
+    CMTime currentTime = _player.currentTime;
+    CMTime offset = CMTimeMakeWithSeconds(interval, 1);
+    
+    CMTime newTime = CMTimeAdd(currentTime, offset);
+    [_player seekToTime:newTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+        [self updatePlaybackRateMetadata];
+    }];
+}
+
+- (void)skipBackwardWithTimeInterval:(NSTimeInterval)interval {
+    if (_asset != nil) { return; }
+
+    CMTime currentTime = _player.currentTime;
+    CMTime offset = CMTimeMakeWithSeconds(interval, 1);
+
+    CMTime newTime = CMTimeSubtract(currentTime, offset);
+    [_player seekToTime:newTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+        [self updatePlaybackRateMetadata];
+    }];
+}
+
+- (void)seekToPosition:(NSTimeInterval)position {
+    if (_asset != nil) { return; }
+
+    CMTime newPosition = CMTimeMakeWithSeconds(position, 1);
+    [_player seekToTime:newPosition toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
+        [self updatePlaybackRateMetadata];
+    }];
+}
+
+- (void)beginRewind {
+    if (_asset != nil) { return; }
+    
+    _player.rate = -2.0;
+}
+
+- (void)beginFastForward {
+    if (_asset != nil) { return; }
+    
+    _player.rate = 2.0;
+}
+
+- (void)endRewindFastForward {
+    if (_asset != nil) { return; }
+    
+    _player.rate = 1.0;
+}
+
+// MARK: MPNowPlayingInforCenter Management Methods
+- (void)updatePlaybackRateMetadata {
+    if (_player.currentItem == nil) {
+        duration = 0;
+        nowPlayingInfoCenter.nowPlayingInfo = nil;
+        return;
+    }
+    
+    NSMutableDictionary *nowPlayingInfo;
+    if ([nowPlayingInfoCenter.nowPlayingInfo isKindOfClass:[NSDictionary class]]) {
+        nowPlayingInfo = [[NSMutableDictionary alloc] initWithDictionary:nowPlayingInfoCenter.nowPlayingInfo];
+    } else {
+        nowPlayingInfo = [[NSMutableDictionary alloc] init];
+    }
+    duration = CMTimeGetSeconds(_player.currentItem.duration);
+    Float64 time = CMTimeGetSeconds(_player.currentItem.currentTime);
+    float rate = _player.rate;
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:duration] forKey:MPMediaItemPropertyPlaybackDuration];
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:time] forKey:MPNowPlayingInfoPropertyElapsedPlaybackTime];
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:rate] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+    [nowPlayingInfo setObject:[NSNumber numberWithDouble:rate] forKey:MPNowPlayingInfoPropertyDefaultPlaybackRate];
+    nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo;
+    
+    if (_player.rate == 0.0) {
+        state = PlaybackStatePaused;
+        
+    } else {
+        state = PlaybackStatePlaying;
+    }
+}
+
+// MARK: Notification Observing Methods
+- (void)handleAVPlayerItemDidPlayToEndTimeNotification:(NSNotification *)notification {
+    [_player replaceCurrentItemWithPlayerItem:nil];
+}
 
 - (void)handleAudioSessionInterruption:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
@@ -112,8 +247,30 @@
     }
 }
 
-- (void)handleAVPlayerItemDidPlayToEndTimeNotification:(NSNotification *)notification {
-    
+// MARK: Key-Value Observing Method
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change context:(nullable void *)context {
+    if ([object isKindOfClass:[AVURLAsset class]] && (AVURLAsset *)object == _asset.urlAsset && [keyPath isEqualToString:@"isPlayable"]) {
+        if (_asset.urlAsset.isPlayable) {
+            _playerItem = [AVPlayerItem playerItemWithAsset:_asset.urlAsset];
+            [_player replaceCurrentItemWithPlayerItem:_playerItem];
+        }
+    } else if ([object isKindOfClass:[AVPlayerItem class]] && (AVPlayerItem *)object == _playerItem && [keyPath isEqualToString:@"status"]) {
+        if (_playerItem.status == AVPlayerItemStatusReadyToPlay) {
+            [_player play];
+        }
+    } else if ([object isKindOfClass:[AVPlayer class]] && (AVPlayer *)object == _player && [keyPath isEqualToString:@"currentItem"]) {
+        
+        // Cleanup if needed.
+        if (_player.currentItem == nil) {
+            _asset = nil;
+            _playerItem = nil;
+        }
+        [self updatePlaybackRateMetadata];
+    } else if ([object isKindOfClass:[AVPlayer class]] && (AVPlayer *)object == _player && [keyPath isEqualToString:@"rate"]) {
+        [self updatePlaybackRateMetadata];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kPlayerRateDidChangeNotification object:nil];
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
-
 @end
