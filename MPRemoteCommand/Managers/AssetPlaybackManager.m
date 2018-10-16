@@ -80,7 +80,7 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)play {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
     
     if (shouldResumePlaybackAfterInterruption == false) {
         shouldResumePlaybackAfterInterruption = true;
@@ -91,7 +91,7 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)pause {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
 
     if (state == PlaybackStateInterrupted) {
         shouldResumePlaybackAfterInterruption = false;
@@ -101,7 +101,7 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)togglePlayPause {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
 
     if (_player.rate == 1.0) {
         [self pause];
@@ -111,7 +111,7 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)stop {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
 
     _asset = nil;
     _playerItem = nil;
@@ -119,17 +119,17 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)nextTrack {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
     [[NSNotificationCenter defaultCenter] postNotificationName:kNextTrackNotification object:nil userInfo:@{kAssetNameKey: _asset.assetName}];
 }
 
 - (void)previousTrack {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
     [[NSNotificationCenter defaultCenter] postNotificationName:kPreviousTrackNotification object:nil userInfo:@{kAssetNameKey: _asset.assetName}];
 }
 
 - (void)skipForwardWithTimeInterval:(NSTimeInterval)interval {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
     
     CMTime currentTime = _player.currentTime;
     CMTime offset = CMTimeMakeWithSeconds(interval, 1);
@@ -141,7 +141,7 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)skipBackwardWithTimeInterval:(NSTimeInterval)interval {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
 
     CMTime currentTime = _player.currentTime;
     CMTime offset = CMTimeMakeWithSeconds(interval, 1);
@@ -153,7 +153,7 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)seekToPosition:(NSTimeInterval)position {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
 
     CMTime newPosition = CMTimeMakeWithSeconds(position, 1);
     [_player seekToTime:newPosition toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
@@ -162,19 +162,19 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 }
 
 - (void)beginRewind {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
     
     _player.rate = -2.0;
 }
 
 - (void)beginFastForward {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
     
     _player.rate = 2.0;
 }
 
 - (void)endRewindFastForward {
-    if (_asset != nil) { return; }
+    if (_asset == nil) { return; }
     
     _player.rate = 1.0;
 }
@@ -249,9 +249,10 @@ NSString *const kPlayerRateDidChangeNotification = @"playerRateDidChangeNotifica
 
 // MARK: Key-Value Observing Method
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSKeyValueChangeKey, id> *)change context:(nullable void *)context {
+    NSLog(@"#keyPath(%@.%@)", NSStringFromClass([object class]), keyPath);
     if ([object isKindOfClass:[AVURLAsset class]] && (AVURLAsset *)object == _asset.urlAsset && [keyPath isEqualToString:@"isPlayable"]) {
         if (_asset.urlAsset.isPlayable) {
-            _playerItem = [AVPlayerItem playerItemWithAsset:_asset.urlAsset];
+            [self setPlayerItem:[AVPlayerItem playerItemWithAsset:_asset.urlAsset]];
             [_player replaceCurrentItemWithPlayerItem:_playerItem];
         }
     } else if ([object isKindOfClass:[AVPlayerItem class]] && (AVPlayerItem *)object == _playerItem && [keyPath isEqualToString:@"status"]) {

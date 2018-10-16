@@ -82,18 +82,27 @@
             return;
         }
     }
-    switch remoteCommand {
-    case .nextTrack: remoteCommandManager.toggleNextTrackCommand(enable)
-    case .previousTrack: remoteCommandManager.togglePreviousTrackCommand(enable)
-    case .skipForward: remoteCommandManager.toggleSkipForwardCommand(enable, interval: 15)
-    case .skipBackward: remoteCommandManager.toggleSkipBackwardCommand(enable, interval: 20)
-    case .seekForward: remoteCommandManager.toggleSeekForwardCommand(enable)
-    case .seekBackward: remoteCommandManager.toggleSeekBackwardCommand(enable)
-    case .changePlaybackPosition: remoteCommandManager.toggleChangePlaybackPositionCommand(enable)
-    case .like: remoteCommandManager.toggleLikeCommand(enable)
-    case .dislike: remoteCommandManager.toggleDislikeCommand(enable)
-    case .bookmark: remoteCommandManager.toggleBookmarkCommand(enable)
-    }
+    
+    [remoteCommandManager toggleNextTrackCommand:enable];
+    [remoteCommandManager togglePreviousTrackCommand:enable];
+    [remoteCommandManager toggleSkipForwardCommand:enable];
+    [remoteCommandManager toggleSkipBackwardCommand:enable];
+    [remoteCommandManager toggleSeekForwardCommand:enable];
+    [remoteCommandManager toggleSeekForwardCommand:enable];
+    [remoteCommandManager toggleSeekBackwardCommand:enable];
+    [remoteCommandManager toggleChangePlaybackPositionCommand:enable];
+    [remoteCommandManager toggleLikeCommand:enable];
+    [remoteCommandManager toggleDislikeCommand:enable];
+    [remoteCommandManager toggleBookmarkCommand:enable];
+//    case .skipForward: remoteCommandManager.toggleSkipForwardCommand(enable, interval: 15)
+//    case .skipBackward: remoteCommandManager.toggleSkipBackwardCommand(enable, interval: 20)
+//    case .seekForward: remoteCommandManager.toggleSeekForwardCommand(enable)
+//    case .seekBackward: remoteCommandManager.toggleSeekBackwardCommand(enable)
+//    case .changePlaybackPosition: remoteCommandManager.toggleChangePlaybackPositionCommand(enable)
+//    case .like: remoteCommandManager.toggleLikeCommand(enable)
+//    case .dislike: remoteCommandManager.toggleDislikeCommand(enable)
+//    case .bookmark: remoteCommandManager.toggleBookmarkCommand(enable)
+
 }
 
 @end

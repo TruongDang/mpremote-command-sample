@@ -20,4 +20,6 @@ extern NSString *const kAssetNameKey;
 /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
 @property (strong, nonatomic) AVURLAsset *urlAsset;
 
+- (instancetype)initWithassetName:(NSString *)assetName urlAsset:(AVURLAsset *)urlAsset;
+
 @end

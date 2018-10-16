@@ -10,19 +10,19 @@
 
 @implementation RemoteCommandManager
 
--(instancetype)initWithAssetPlaybackManager:(AssetPlaybackManager *)assetPlaybackManager {
+-(instancetype)initWithAssetPlaybackManager:(AssetPlaybackManager *)anAssetPlaybackManager {
     self = [super init];
     if (self != nil) {
         remoteCommandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-        self->assetPlaybackManager = assetPlaybackManager;
+        assetPlaybackManager = anAssetPlaybackManager;
     }
     return self;
 }
 
 -(void)dealloc {
     [self activatePlaybackCommands:false];
-    [self toggleNextTrackCommand:false];
-    [self togglePreviousTrackCommand:false];
+    [self toggleNextTrackCommand:true];
+    [self togglePreviousTrackCommand:true];
     [self toggleSkipForwardCommand:false];
     [self toggleSkipBackwardCommand:false];
     [self toggleSeekForwardCommand:false];
@@ -59,6 +59,7 @@
     }
     [remoteCommandCenter.nextTrackCommand setEnabled:enable];
 }
+
 -(void)togglePreviousTrackCommand:(BOOL)enable {
     if (enable) {
         [remoteCommandCenter.previousTrackCommand addTarget:self action:@selector(handlePreviousTrackCommandEvent:)];

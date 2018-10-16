@@ -10,7 +10,6 @@
 		F308F3A221663378004515EB /* Song 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F308F39F21663378004515EB /* Song 1.m4a */; };
 		F308F3A321663378004515EB /* Song 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F308F3A021663378004515EB /* Song 2.m4a */; };
 		F308F3A421663378004515EB /* Song 3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F308F3A121663378004515EB /* Song 3.m4a */; };
-		F308F3AC2166339E004515EB /* RemoteCommandDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F308F3A92166339D004515EB /* RemoteCommandDataSource.swift */; };
 		F308F3B1216633CC004515EB /* Asset.m in Sources */ = {isa = PBXBuildFile; fileRef = F308F3B0216633CC004515EB /* Asset.m */; };
 		F308F3B4216634B4004515EB /* RemoteCommandDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F308F3B3216634B4004515EB /* RemoteCommandDataSource.m */; };
 		F308F3B7216634D0004515EB /* RemoteCommandManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F308F3B6216634D0004515EB /* RemoteCommandManager.m */; };
@@ -29,7 +28,6 @@
 		F308F39F21663378004515EB /* Song 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Song 1.m4a"; sourceTree = "<group>"; };
 		F308F3A021663378004515EB /* Song 2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Song 2.m4a"; sourceTree = "<group>"; };
 		F308F3A121663378004515EB /* Song 3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Song 3.m4a"; sourceTree = "<group>"; };
-		F308F3A92166339D004515EB /* RemoteCommandDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandDataSource.swift; sourceTree = "<group>"; };
 		F308F3AF216633CC004515EB /* Asset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Asset.h; sourceTree = "<group>"; };
 		F308F3B0216633CC004515EB /* Asset.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Asset.m; sourceTree = "<group>"; };
 		F308F3B2216634B4004515EB /* RemoteCommandDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteCommandDataSource.h; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 		F308F3A82166339D004515EB /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				F308F3A92166339D004515EB /* RemoteCommandDataSource.swift */,
 				F308F3B2216634B4004515EB /* RemoteCommandDataSource.h */,
 				F308F3B3216634B4004515EB /* RemoteCommandDataSource.m */,
 				F308F3B5216634D0004515EB /* RemoteCommandManager.h */,
@@ -168,7 +165,7 @@
 				TargetAttributes = {
 					F3A6BF6721645DB700092041 = {
 						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -218,7 +215,6 @@
 				F3A6BF8D216468A200092041 /* RemoteCommandListTableViewCell.m in Sources */,
 				F3A6BF882164682B00092041 /* RemoteCommandListTableViewController.m in Sources */,
 				F308F3B4216634B4004515EB /* RemoteCommandDataSource.m in Sources */,
-				F308F3AC2166339E004515EB /* RemoteCommandDataSource.swift in Sources */,
 				F308F3B7216634D0004515EB /* RemoteCommandManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -271,10 +267,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BQBT35G7XK;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -296,7 +292,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "example.truongdv.remote-command";
+				PRODUCT_BUNDLE_IDENTIFIER = "example.truongdv.remote-command1";
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier:lower)";
 				PRODUCT_NAME = "Remote Command";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -336,10 +332,10 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = BQBT35G7XK;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -354,7 +350,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "example.truongdv.remote-command";
+				PRODUCT_BUNDLE_IDENTIFIER = "example.truongdv.remote-command1";
 				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier:lower)";
 				PRODUCT_NAME = "Remote Command";
 				PROVISIONING_PROFILE_SPECIFIER = "";

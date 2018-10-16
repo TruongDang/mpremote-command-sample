@@ -21,4 +21,26 @@
 
 -(instancetype)initWithAssetPlaybackManager:(AssetPlaybackManager *)assetPlaybackManager;
 
+-(void)activatePlaybackCommands:(BOOL)enable;
+
+-(void)toggleNextTrackCommand:(BOOL)enable;
+
+-(void)togglePreviousTrackCommand:(BOOL)enable;
+
+-(void)toggleSkipForwardCommand:(BOOL)enable;
+
+-(void)toggleSkipBackwardCommand:(BOOL)enable;
+
+-(void)toggleSeekForwardCommand:(BOOL)enable;
+
+-(void)toggleSeekBackwardCommand:(BOOL)enable;
+
+-(void)toggleChangePlaybackPositionCommand:(BOOL)enable;
+
+-(void)toggleLikeCommand:(BOOL)enable;
+
+-(void)toggleDislikeCommand:(BOOL)enable;
+
+-(void)toggleBookmarkCommand:(BOOL)enable;
+
 @end

@@ -11,4 +11,12 @@
 NSString *const kAssetNameKey = @"AssetName";
 
 @implementation Asset
+- (instancetype)initWithassetName:(NSString *)assetName urlAsset:(AVURLAsset *)urlAsset {
+    self = [super init];
+    if (self != nil) {
+        _assetName = assetName;
+        _urlAsset = urlAsset;
+    }
+    return self;
+}
 @end
