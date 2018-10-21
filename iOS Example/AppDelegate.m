@@ -1,8 +1,9 @@
 //
 //  AppDelegate.m
-//  ios-app
+//  MPRemoteCommandCenter
 //
-//  Created by Đặng Văn Trường on 10/3/18.
+//  Created by Đặng Văn Trường on 10/21/18.
+//  Copyright © 2018 Đặng Văn Trường. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -15,7 +16,38 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    // Initializer the `AssetPlaybackManager`.
+    self.assetPlaybackManager = [[AssetPlaybackManager alloc] init];
+    
+    // Initializer the `RemoteCommandManager`.
+    self.remoteCommandManager = [[RemoteCommandManager alloc] initWithAssetPlaybackManager:self.assetPlaybackManager];
+    
+    // Always enable playback commands in MPRemoteCommandCenter.
+    [self.remoteCommandManager activatePlaybackCommands:true];
+//    [self.remoteCommandManager toggleNextTrackCommand:true];
+//    [self.remoteCommandManager togglePreviousTrackCommand:true];
+
+    
+    if (@available(iOS 10.0, *)) {
+        @try {
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback mode:AVAudioSessionModeDefault options:0 error:nil];
+        } @catch (NSException *exception) {
+            NSLog(@"An error occured setting the audio session category: %@", [exception description]);
+        }
+    }
+
+    @try {
+        [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    } @catch (NSException *exception) {
+        NSLog(@"An Error occured activating the audio session while resuming from interruption: %@", [exception description]);
+    }
+
+    
+    ViewController *assetListTableViewController = (ViewController*)self.window.rootViewController;
+    assetListTableViewController.assetPlaybackManager = self.assetPlaybackManager;
+    assetListTableViewController.remoteCommandManager = self.remoteCommandManager;
+    
     return YES;
 }
 

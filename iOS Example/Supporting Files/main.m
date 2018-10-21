@@ -1,8 +1,8 @@
 //
 //  main.m
-//  ios-app
+//  iOS Example
 //
-//  Created by Đặng Văn Trường on 10/3/18.
+//  Created by Đặng Văn Trường on 10/21/18.
 //
 
 #import <UIKit/UIKit.h>
