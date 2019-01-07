@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Application Life Cycle
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         // Initializer the `RemoteCommandManager`.
         remoteCommandManager = RemoteCommandManager(assetPlaybackManager: assetPlaybackManager)
@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let audioSession = AVAudioSession.sharedInstance()
         
         do {
-            try audioSession.setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeDefault)
+            try audioSession.setCategory(AVAudioSession.Category(rawValue: convertFromAVAudioSessionCategory(AVAudioSession.Category.playback)), mode: AVAudioSession.Mode(rawValue: convertFromAVAudioSessionMode(AVAudioSession.Mode.default)))
         }
         catch {
             print("An error occured setting the audio session category: \(error)")
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Set the AVAudioSession as active.  This is required so that your application becomes the "Now Playing" app.
         do {
-            try audioSession.setActive(true, with: [])
+            try audioSession.setActive(true, options: [])
         }
         catch {
             print("An Error occured activating the audio session: \(error)")
@@ -53,10 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Inject dependencies needed by the app.
         
         guard let tabBarController = window?.rootViewController as? UITabBarController,
-        let firstNavigationController = tabBarController.viewControllers?.first as? UINavigationController,
-        let lastNavigationController = tabBarController.viewControllers?.last as? UINavigationController,
-        let assetListTableViewController = firstNavigationController.topViewController as? AssetListTableViewController,
-        let remoteCommandListTableViewController = lastNavigationController.topViewController as? RemoteCommandListTableViewController else { return true }
+            let firstNavigationController = tabBarController.viewControllers?.first as? UINavigationController,
+            let lastNavigationController = tabBarController.viewControllers?.last as? UINavigationController,
+            let assetListTableViewController = firstNavigationController.topViewController as? AssetListTableViewController,
+            let remoteCommandListTableViewController = lastNavigationController.topViewController as? RemoteCommandListTableViewController else { return true }
         
         assetListTableViewController.assetPlaybackManager = assetPlaybackManager
         remoteCommandListTableViewController.remoteCommandDataSource = RemoteCommandDataSource(remoteCommandManager: remoteCommandManager)
@@ -65,3 +65,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromAVAudioSessionCategory(_ input: AVAudioSession.Category) -> String {
+    return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromAVAudioSessionMode(_ input: AVAudioSession.Mode) -> String {
+    return input.rawValue
+}
